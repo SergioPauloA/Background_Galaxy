@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galáxia com Chuva de Meteoros</title>
+    <style>
+        /* Configuração do body */
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+        }
+
+        /* Fundo da galáxia no canto inferior direito */
+        .galaxy-background {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -100%;
+            left: -100%;
+            background: radial-gradient(circle at 80% 85%, rgba(140, 25, 160, 0.8), rgba(75, 0, 130, 0.6), rgba(0, 0, 40, 0.4), transparent 80%);
+            animation: softGlow 4s ease-in-out infinite;
+            z-index: 1;
+            filter: blur(3px);
+        }
+
+        /* Animação de claridade suave */
+        @keyframes softGlow {
+            0%, 100% {
+                opacity: 0.7;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Container das estrelas */
+        .stars-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 2;
+            pointer-events: none;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        /* Estrelas variando tamanho */
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0.8;
+        }
+
+        /* Estrelas pequenas */
+        .star.small {
+            width: 1px;
+            height: 1px;
+            opacity: 0.5;
+        }
+
+        /* Estrelas médias */
+        .star.medium {
+            width: 1.5px;
+            height: 1.5px;
+            opacity: 0.7;
+        }
+
+        /* Estrelas grandes */
+        .star.large {
+            width: 2px;
+            height: 2px;
+            opacity: 0.9;
+        }
+
+        /* Animações de meteoros (diagonais e verticais) */
+        @keyframes meteorShowerLeft {
+            0% { transform: translate(-100vw, -100vh) rotate(45deg); opacity: 1; }
+            100% { transform: translate(100vw, 100vh) rotate(45deg); opacity: 0; }
+        }
+
+        @keyframes meteorShowerRight {
+            0% { transform: translate(100vw, -100vh) rotate(-45deg); opacity: 1; }
+            100% { transform: translate(-100vw, 100vh) rotate(-45deg); opacity: 0; }
+        }
+
+        @keyframes meteorShowerDown {
+            0% { transform: translateY(-100vh); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+
+        /* Animação de piscar para algumas estrelas */
+        @keyframes blink {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        /* Ajustes para aplicar as animações nas estrelas */
+        .star {
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+
+        /* Diferentes durações para simular a variação de velocidade */
+        .star.small { animation-duration: 6s; }
+        .star.medium { animation-duration: 8s; }
+        .star.large { animation-duration: 10s; }
+    </style>
+</head>
+<body>
+    <!-- Fundo da galáxia -->
+    <div class="galaxy-background"></div>
+
+    <!-- Container das estrelas com chuva de meteoros -->
+    <div class="stars-container">
+        <!-- Estrelas geradas dinamicamente -->
+        <script>
+            const starContainer = document.querySelector('.stars-container');
+            const starCount = 120; // Quantidade de estrelas aumentada
+
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                const sizeClass = ['small', 'medium', 'large'][Math.floor(Math.random() * 3)];
+                star.classList.add('star', sizeClass);
+
+                // Aleatoriedade da direção: esquerda, direita, ou baixo
+                const direction = Math.random();
+                if (direction < 0.33) {
+                    star.style.animationName = 'meteorShowerLeft';
+                } else if (direction < 0.66) {
+                    star.style.animationName = 'meteorShowerRight';
+                } else {
+                    star.style.animationName = 'meteorShowerDown';
+                }
+
+                // Posicionamento inicial aleatório na tela
+                star.style.top = `${Math.random() * 100}vh`;
+                star.style.left = `${Math.random() * 100}vw`;
+
+                // Efeito de piscar para 30% das estrelas
+                if (Math.random() < 0.3) {  // 30% de chance de piscar
+                    star.style.animation = `${star.style.animationName} ${star.style.animationDuration} linear infinite, blink 1.5s linear infinite`;
+                } else {
+                    // Se não piscar, apenas a animação de meteoros
+                    star.style.animation = `${star.style.animationName} ${star.style.animationDuration} linear infinite`;
+                }
+
+                starContainer.appendChild(star);
+            }
+        </script>
+    </div>
+</body>
+</html>
